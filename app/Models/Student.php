@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Student extends Model
 {
     protected $fillable = [
+        'user_id',
         'registration_no',
         'name',
         'father_name',
@@ -27,6 +29,11 @@ class Student extends Model
         'status',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function fingerprints()
     {
         return $this->hasMany(FingerprintTemplate::class);
@@ -45,5 +52,35 @@ class Student extends Model
     public function activeRoomAllocation()
     {
         return $this->hasOne(RoomAllocation::class)->where('status', 'active');
+    }
+
+    public function guestMeals()
+    {
+        return $this->hasMany(GuestMeal::class);
+    }
+
+    public function messOffs()
+    {
+        return $this->hasMany(MessOff::class);
+    }
+
+    public function leaveRequests()
+    {
+        return $this->hasMany(LeaveRequest::class);
+    }
+
+    public function gatePasses()
+    {
+        return $this->hasMany(GatePass::class);
+    }
+
+    public function complaints()
+    {
+        return $this->hasMany(Complaint::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class);
     }
 }

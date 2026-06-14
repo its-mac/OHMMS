@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -31,7 +34,7 @@ class StudentController extends Controller
             'hostel' => 'nullable|string|max:255',
             'room_no' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255|unique:students,email',
+            'email' => 'required|email|max:255|unique:students,email|unique:users,email',
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'blood_group' => 'nullable|string|max:20',
             'address' => 'nullable|string',
@@ -45,10 +48,25 @@ class StudentController extends Controller
             $validated['photo'] = $request->file('photo')->store('students', 'public');
         }
 
-        Student::create($validated);
+        DB::transaction(function () use (&$validated) {
+
+            $user = User::create([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+                'role' => 'student',
+                'password' => Hash::make($validated['registration_no']),
+            ]);
+
+            $validated['user_id'] = $user->id;
+
+            Student::create($validated);
+        });
 
         return redirect()->route('admin.students.index')
-            ->with('success', 'Student created successfully.');
+            ->with(
+                'success',
+                'Student created successfully. Login password is Registration Number.'
+            );
     }
 
     public function update(Request $request, Student $student)
@@ -63,7 +81,7 @@ class StudentController extends Controller
             'hostel' => 'nullable|string|max:255',
             'room_no' => 'nullable|string|max:255',
             'phone' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255|unique:students,email,' . $student->id,
+            'email' => 'required|email|max:255|unique:students,email,' . $student->id,
             'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'blood_group' => 'nullable|string|max:20',
             'address' => 'nullable|string',
@@ -81,6 +99,14 @@ class StudentController extends Controller
             $validated['photo'] = $request->file('photo')->store('students', 'public');
         }
 
+        if ($student->user) {
+
+            $student->user->update([
+                'name' => $validated['name'],
+                'email' => $validated['email'],
+            ]);
+        }
+
         $student->update($validated);
 
         return redirect()->route('admin.students.index')
@@ -93,7 +119,16 @@ class StudentController extends Controller
             Storage::disk('public')->delete($student->photo);
         }
 
-        $student->delete();
+        DB::transaction(function () use ($student) {
+
+            $user = $student->user;
+
+            $student->delete();
+
+            if ($user) {
+                $user->delete();
+            }
+        });
 
         return redirect()->route('admin.students.index')
             ->with('success', 'Student deleted successfully.');

@@ -22,4 +22,9 @@ class MealSession extends Model
     {
         return $this->hasMany(MessMenu::class);
     }
+
+    public function guestMeals()
+    {
+        return $this->hasMany(GuestMeal::class);
+    }
 }

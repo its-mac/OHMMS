@@ -13,8 +13,18 @@
                     <label>Navigation</label>
                 </li>
 
-                <li class="pc-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('dashboard') }}" class="pc-link">
+                @php
+                    $dashboardRoute = match (auth()->user()?->role) {
+                        'admin' => 'admin.dashboard',
+                        'manager' => 'manager.dashboard',
+                        'student' => 'student.dashboard',
+                        default => 'dashboard',
+                    };
+                @endphp
+
+                <li
+                    class="pc-item {{ request()->routeIs($dashboardRoute) || request()->routeIs('dashboard') ? 'active' : '' }}">
+                    <a href="{{ route($dashboardRoute) }}" class="pc-link">
                         <span class="pc-micon"><i class="ph ph-house-line"></i></span>
                         <span class="pc-mtext">Dashboard</span>
                     </a>
@@ -25,8 +35,8 @@
                         <label>Administration</label>
                     </li>
 
-                    <li class="pc-item">
-                        <a href="#" class="pc-link">
+                    <li class="pc-item {{ request()->routeIs('admin.managers.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.managers.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-users-three"></i></span>
                             <span class="pc-mtext">Managers</span>
                         </a>
@@ -98,6 +108,13 @@
                         </a>
                     </li>
 
+                    <li class="pc-item {{ request()->routeIs('admin.guest-meals.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.guest-meals.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
+                            <span class="pc-mtext">Guest Meals</span>
+                        </a>
+                    </li>
+
                     <li
                         class="pc-item pc-hasmenu {{ request()->routeIs('admin.attendance.*') ? 'active pc-trigger' : '' }}">
                         <a href="#" class="pc-link">
@@ -137,6 +154,187 @@
                         <a href="#" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-fork-knife"></i></span>
                             <span class="pc-mtext">Mess Management</span>
+                        </a>
+                    </li>
+                    <li class="pc-item pc-caption">
+                        <label>Finance</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('admin.fee-structures.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.fee-structures.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-money"></i></span>
+                            <span class="pc-mtext">Fee Structures</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.invoices.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-file-text"></i></span>
+                            <span class="pc-mtext">Invoices / Challans</span>
+                        </a>
+                    </li>
+                    <li class="pc-item {{ request()->routeIs('admin.finance-reports.defaulters') ? 'active' : '' }}">
+                        <a href="{{ route('admin.finance-reports.defaulters') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-warning-circle"></i></span>
+                            <span class="pc-mtext">Defaulters</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('admin.finance-reports.collections') ? 'active' : '' }}">
+                        <a href="{{ route('admin.finance-reports.collections') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chart-line-up"></i></span>
+                            <span class="pc-mtext">Collection Report</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if (auth()->user()?->role === 'manager')
+                    <li class="pc-item pc-caption">
+                        <label>Manager Portal</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.mess-offs.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.mess-offs.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-x"></i></span>
+                            <span class="pc-mtext">Mess Off Requests</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Mess Operations</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.guest-meals.*') ? 'active' : '' }}">
+                        <a href="#" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
+                            <span class="pc-mtext">Guest Meals</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item">
+                        <a href="#" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-fingerprint"></i></span>
+                            <span class="pc-mtext">Meal Attendance</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item">
+                        <a href="#" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chart-bar"></i></span>
+                            <span class="pc-mtext">Mess Reports</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Student Services</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.complaints.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.complaints.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chat-circle-text"></i></span>
+                            <span class="pc-mtext">Complaints</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.gate-passes.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.gate-passes.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-door-open"></i></span>
+                            <span class="pc-mtext">Gate Passes</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.leave-requests.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.leave-requests.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-check"></i></span>
+                            <span class="pc-mtext">Leave Requests</span>
+                        </a>
+                    </li>
+                @endif
+
+                @if (auth()->user()?->role === 'student')
+                    <li class="pc-item pc-caption">
+                        <label>Student Portal</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.profile.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.profile.show') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-user"></i></span>
+                            <span class="pc-mtext">My Profile</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.room.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.room.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-bed"></i></span>
+                            <span class="pc-mtext">My Room</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Mess</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.mess-menu.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.mess-menu.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-fork-knife"></i></span>
+                            <span class="pc-mtext">Weekly Menu</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.attendance.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.attendance.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-fingerprint"></i></span>
+                            <span class="pc-mtext">Attendance History</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Requests</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.mess-offs.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.mess-offs.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-x"></i></span>
+                            <span class="pc-mtext">Mess Off</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.guest-meals.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.guest-meals.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
+                            <span class="pc-mtext">Guest Meals</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.gate-passes.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.gate-passes.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-door-open"></i></span>
+                            <span class="pc-mtext">Gate Passes</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.complaints.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.complaints.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chat-circle-text"></i></span>
+                            <span class="pc-mtext">Complaints</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.leave-requests.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.leave-requests.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-check"></i></span>
+                            <span class="pc-mtext">Leave Requests</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Finance</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('student.fees.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.fees.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-money"></i></span>
+                            <span class="pc-mtext">My Fees</span>
                         </a>
                     </li>
                 @endif
