@@ -31,7 +31,7 @@
 
             <div class="col-md-3 mb-3">
                 <button class="btn btn-primary">Filter</button>
-                <a href="{{ route('admin.finance-reports.defaulters') }}" class="btn btn-light">Reset</a>
+                <a href="{{ route(auth()->user()->role . '.finance-reports.defaulters') }}" class="btn btn-light">Reset</a>
             </div>
         </form>
     </div>

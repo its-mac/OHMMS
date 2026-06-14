@@ -46,7 +46,7 @@ class PaymentController extends Controller
         });
 
         return redirect()
-            ->route('admin.invoices.show', $invoice)
+            ->route('manager.invoices.show', $invoice)
             ->with('success', 'Payment recorded successfully.');
     }
 }

@@ -50,7 +50,7 @@
                     </li>
 
                     <li class="pc-item pc-caption">
-                        <label>Hostel Structure</label>
+                        <label>Infrastructure</label>
                     </li>
 
                     <li class="pc-item {{ request()->routeIs('admin.hostels.*') ? 'active' : '' }}">
@@ -81,15 +81,8 @@
                         </a>
                     </li>
 
-                    <li class="pc-item {{ request()->routeIs('admin.room-allocations.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.room-allocations.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-user-switch"></i></span>
-                            <span class="pc-mtext">Room Allocations</span>
-                        </a>
-                    </li>
-
                     <li class="pc-item pc-caption">
-                        <label>Mess & Attendance</label>
+                        <label>Configuration</label>
                     </li>
 
                     <li class="pc-item {{ request()->routeIs('admin.meal-sessions.*') ? 'active' : '' }}">
@@ -99,67 +92,6 @@
                         </a>
                     </li>
 
-                    <li class="pc-item {{ request()->routeIs('admin.mess-menus.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.mess-menus.index') }}" class="pc-link">
-                            <span class="pc-micon">
-                                <i class="ti ti-tools-kitchen-2"></i>
-                            </span>
-                            <span class="pc-mtext">Mess Menu</span>
-                        </a>
-                    </li>
-
-                    <li class="pc-item {{ request()->routeIs('admin.guest-meals.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.guest-meals.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
-                            <span class="pc-mtext">Guest Meals</span>
-                        </a>
-                    </li>
-
-                    <li
-                        class="pc-item pc-hasmenu {{ request()->routeIs('admin.attendance.*') ? 'active pc-trigger' : '' }}">
-                        <a href="#" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-fingerprint"></i></span>
-                            <span class="pc-mtext">Attendance</span>
-                            <span class="pc-arrow"><i class="ph ph-caret-right"></i></span>
-                        </a>
-
-                        <ul class="pc-submenu">
-                            <li class="pc-item {{ request()->routeIs('admin.attendance.scan') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('admin.attendance.scan') }}">
-                                    Scan Attendance
-                                </a>
-                            </li>
-
-                            <li class="pc-item {{ request()->routeIs('admin.attendance.today') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('admin.attendance.today') }}">
-                                    Today's Attendance
-                                </a>
-                            </li>
-
-                            <li class="pc-item {{ request()->routeIs('admin.attendance.index') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('admin.attendance.index') }}">
-                                    Attendance Logs
-                                </a>
-                            </li>
-
-                            <li class="pc-item {{ request()->routeIs('admin.attendance.reports') ? 'active' : '' }}">
-                                <a class="pc-link" href="{{ route('admin.attendance.reports') }}">
-                                    Reports
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    <li class="pc-item">
-                        <a href="#" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-fork-knife"></i></span>
-                            <span class="pc-mtext">Mess Management</span>
-                        </a>
-                    </li>
-                    <li class="pc-item pc-caption">
-                        <label>Finance</label>
-                    </li>
-
                     <li class="pc-item {{ request()->routeIs('admin.fee-structures.*') ? 'active' : '' }}">
                         <a href="{{ route('admin.fee-structures.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-money"></i></span>
@@ -167,16 +99,14 @@
                         </a>
                     </li>
 
-                    <li class="pc-item {{ request()->routeIs('admin.invoices.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.invoices.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-file-text"></i></span>
-                            <span class="pc-mtext">Invoices / Challans</span>
-                        </a>
+                    <li class="pc-item pc-caption">
+                        <label>Monitoring & Reports</label>
                     </li>
+
                     <li class="pc-item {{ request()->routeIs('admin.finance-reports.defaulters') ? 'active' : '' }}">
                         <a href="{{ route('admin.finance-reports.defaulters') }}" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-warning-circle"></i></span>
-                            <span class="pc-mtext">Defaulters</span>
+                            <span class="pc-mtext">Defaulters Report</span>
                         </a>
                     </li>
 
@@ -190,7 +120,32 @@
 
                 @if (auth()->user()?->role === 'manager')
                     <li class="pc-item pc-caption">
-                        <label>Manager Portal</label>
+                        <label>Hostel Operations</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.room-allocations.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.room-allocations.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-user-switch"></i></span>
+                            <span class="pc-mtext">Room Allocations</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Mess Operations</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.mess-menus.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.mess-menus.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ti ti-tools-kitchen-2"></i></span>
+                            <span class="pc-mtext">Mess Menu</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.guest-meals.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.guest-meals.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
+                            <span class="pc-mtext">Guest Meals</span>
+                        </a>
                     </li>
 
                     <li class="pc-item {{ request()->routeIs('manager.mess-offs.*') ? 'active' : '' }}">
@@ -200,39 +155,52 @@
                         </a>
                     </li>
 
-                    <li class="pc-item pc-caption">
-                        <label>Mess Operations</label>
-                    </li>
-
-                    <li class="pc-item {{ request()->routeIs('manager.guest-meals.*') ? 'active' : '' }}">
-                        <a href="#" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-users-three"></i></span>
-                            <span class="pc-mtext">Guest Meals</span>
-                        </a>
-                    </li>
-
-                    <li class="pc-item">
+                    <li
+                        class="pc-item pc-hasmenu {{ request()->routeIs('manager.attendance.*') ? 'active pc-trigger' : '' }}">
                         <a href="#" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-fingerprint"></i></span>
-                            <span class="pc-mtext">Meal Attendance</span>
+                            <span class="pc-mtext">Attendance</span>
+                            <span class="pc-arrow"><i class="ph ph-caret-right"></i></span>
                         </a>
-                    </li>
 
-                    <li class="pc-item">
-                        <a href="#" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-chart-bar"></i></span>
-                            <span class="pc-mtext">Mess Reports</span>
-                        </a>
+                        <ul class="pc-submenu">
+
+                            <li class="pc-item {{ request()->routeIs('manager.attendance.scan') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('manager.attendance.scan') }}">
+                                    Scan Attendance
+                                </a>
+                            </li>
+
+                            <li class="pc-item {{ request()->routeIs('manager.attendance.today') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('manager.attendance.today') }}">
+                                    Today's Attendance
+                                </a>
+                            </li>
+
+                            <li class="pc-item {{ request()->routeIs('manager.attendance.index') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('manager.attendance.index') }}">
+                                    Attendance Logs
+                                </a>
+                            </li>
+
+                            <li
+                                class="pc-item {{ request()->routeIs('manager.attendance.reports') ? 'active' : '' }}">
+                                <a class="pc-link" href="{{ route('manager.attendance.reports') }}">
+                                    Reports
+                                </a>
+                            </li>
+
+                        </ul>
                     </li>
 
                     <li class="pc-item pc-caption">
                         <label>Student Services</label>
                     </li>
 
-                    <li class="pc-item {{ request()->routeIs('manager.complaints.*') ? 'active' : '' }}">
-                        <a href="{{ route('manager.complaints.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-chat-circle-text"></i></span>
-                            <span class="pc-mtext">Complaints</span>
+                    <li class="pc-item {{ request()->routeIs('manager.leave-requests.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.leave-requests.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-check"></i></span>
+                            <span class="pc-mtext">Leave Requests</span>
                         </a>
                     </li>
 
@@ -243,10 +211,37 @@
                         </a>
                     </li>
 
-                    <li class="pc-item {{ request()->routeIs('manager.leave-requests.*') ? 'active' : '' }}">
-                        <a href="{{ route('manager.leave-requests.index') }}" class="pc-link">
-                            <span class="pc-micon"><i class="ph ph-calendar-check"></i></span>
-                            <span class="pc-mtext">Leave Requests</span>
+                    <li class="pc-item {{ request()->routeIs('manager.complaints.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.complaints.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chat-circle-text"></i></span>
+                            <span class="pc-mtext">Complaints</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item pc-caption">
+                        <label>Finance</label>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('manager.invoices.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.invoices.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-file-text"></i></span>
+                            <span class="pc-mtext">Invoices / Challans</span>
+                        </a>
+                    </li>
+
+                    <li
+                        class="pc-item {{ request()->routeIs('manager.finance-reports.defaulters') ? 'active' : '' }}">
+                        <a href="{{ route('manager.finance-reports.defaulters') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-warning-circle"></i></span>
+                            <span class="pc-mtext">Defaulters</span>
+                        </a>
+                    </li>
+
+                    <li
+                        class="pc-item {{ request()->routeIs('manager.finance-reports.collections') ? 'active' : '' }}">
+                        <a href="{{ route('manager.finance-reports.collections') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chart-line-up"></i></span>
+                            <span class="pc-mtext">Collection Report</span>
                         </a>
                     </li>
                 @endif

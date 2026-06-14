@@ -56,7 +56,7 @@ class MessMenuController extends Controller
         MessMenu::create($validated);
 
         return redirect()
-            ->route('admin.mess-menus.index')
+            ->route('manager.mess-menus.index')
             ->with('success', 'Mess menu created successfully.');
     }
 
@@ -95,7 +95,7 @@ class MessMenuController extends Controller
         $messMenu->update($validated);
 
         return redirect()
-            ->route('admin.mess-menus.index')
+            ->route('manager.mess-menus.index')
             ->with('success', 'Mess menu updated successfully.');
     }
 
@@ -104,7 +104,7 @@ class MessMenuController extends Controller
         $messMenu->delete();
 
         return redirect()
-            ->route('admin.mess-menus.index')
+            ->route('manager.mess-menus.index')
             ->with('success', 'Mess menu deleted successfully.');
     }
 }

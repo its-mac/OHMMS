@@ -73,7 +73,7 @@ class RoomAllocationController extends Controller
         });
 
         return redirect()
-            ->route('admin.room-allocations.index')
+            ->route('manager.room-allocations.index')
             ->with('success', 'Room allocated successfully.');
     }
 
@@ -119,7 +119,7 @@ class RoomAllocationController extends Controller
         });
 
         return redirect()
-            ->route('admin.room-allocations.index')
+            ->route('manager.room-allocations.index')
             ->with('success', 'Room allocation updated successfully.');
     }
 
@@ -142,7 +142,7 @@ class RoomAllocationController extends Controller
         });
 
         return redirect()
-            ->route('admin.room-allocations.index')
+            ->route('manager.room-allocations.index')
             ->with('success', 'Room allocation deleted successfully.');
     }
 }

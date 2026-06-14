@@ -86,7 +86,7 @@ class InvoiceController extends Controller
         });
 
         return redirect()
-            ->route('admin.invoices.index')
+            ->route('manager.invoices.index')
             ->with('success', 'Invoice generated successfully.');
     }
 
