@@ -229,6 +229,13 @@
                         </a>
                     </li>
 
+                    <li class="pc-item {{ request()->routeIs('manager.invoices.generate-monthly') ? 'active' : '' }}">
+                        <a href="{{ route('manager.invoices.generate-monthly') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-calendar-plus"></i></span>
+                            <span class="pc-mtext">Generate Monthly Fees</span>
+                        </a>
+                    </li>
+
                     <li
                         class="pc-item {{ request()->routeIs('manager.finance-reports.defaulters') ? 'active' : '' }}">
                         <a href="{{ route('manager.finance-reports.defaulters') }}" class="pc-link">

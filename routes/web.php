@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BlockController;
 use App\Http\Controllers\FeeStructureController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\Manager\LeaveRequestController as ManagerLeaveRequestCo
 use App\Http\Controllers\Manager\MessOffController as ManagerMessOffController;
 use App\Http\Controllers\ManagerController;
 use App\Http\Controllers\ManagerDashboardController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\Student\StudentAttendanceController;
 use App\Http\Controllers\Student\StudentComplaintController;
 use App\Http\Controllers\Student\StudentFeeController;
@@ -54,6 +56,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.read-all');
+
     /*
     |--------------------------------------------------------------------------
     | Admin Routes - Owner / Configuration / Monitoring
@@ -64,9 +72,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->prefix('admin')
         ->name('admin.')
         ->group(function () {
-            Route::get('/dashboard', function () {
-                return view('dashboards.admin');
-            })->name('dashboard');
+            Route::get('/dashboard', [AdminDashboardController::class, 'index'])
+                ->name('dashboard');
 
             Route::resource('managers', ManagerController::class)->except(['show']);
             Route::resource('students', StudentController::class);
@@ -181,6 +188,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::post('/invoices', [InvoiceController::class, 'store'])
                 ->name('invoices.store');
+
+            Route::get('/invoices/generate-monthly', [InvoiceController::class, 'generateMonthly'])
+                ->name('invoices.generate-monthly');
+
+            Route::post('/invoices/generate-monthly', [InvoiceController::class, 'storeMonthly'])
+                ->name('invoices.store-monthly');
 
             Route::get('/invoices/{invoice}', [InvoiceController::class, 'show'])
                 ->name('invoices.show');
