@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
 use App\Models\FeeStructure;
 use App\Models\Invoice;
 use App\Models\Student;
@@ -83,6 +84,24 @@ class InvoiceController extends Controller
                     'amount' => $fee->amount,
                 ]);
             }
+
+            $invoice->load('student');
+
+            $monthName = \Carbon\Carbon::createFromDate(
+                (int) $validated['year'],
+                (int) $validated['month'],
+                1
+            )->format('F');
+
+            if ($invoice->student?->user_id) {
+                NotificationHelper::sendToUser(
+                    $invoice->student->user_id,
+                    'New Invoice Generated',
+                    'A new fee challan for ' . $monthName . ' ' . $validated['year'] . ' has been generated for your account.',
+                    route('student.fees.index'),
+                    'invoice'
+                );
+            }
         });
 
         return redirect()
@@ -132,10 +151,16 @@ class InvoiceController extends Controller
             ]);
         }
 
+        $monthName = \Carbon\Carbon::createFromDate(
+            (int) $validated['year'],
+            (int) $validated['month'],
+            1
+        )->format('F');
+
         $generated = 0;
         $skipped = 0;
 
-        DB::transaction(function () use ($students, $fees, $validated, &$generated, &$skipped) {
+        DB::transaction(function () use ($students, $fees, $validated, $monthName, &$generated, &$skipped) {
             foreach ($students as $student) {
                 $exists = Invoice::where('student_id', $student->id)
                     ->where('month', $validated['month'])
@@ -165,6 +190,16 @@ class InvoiceController extends Controller
                         'title' => $fee->name,
                         'amount' => $fee->amount,
                     ]);
+                }
+
+                if ($student->user_id) {
+                    NotificationHelper::sendToUser(
+                        $student->user_id,
+                        'New Invoice Generated',
+                        'Your monthly fee challan for ' . $monthName . ' ' . $validated['year'] . ' has been generated.',
+                        route('student.fees.index'),
+                        'invoice'
+                    );
                 }
 
                 $generated++;

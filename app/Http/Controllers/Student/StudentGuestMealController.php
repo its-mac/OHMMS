@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\GuestMeal;
 use App\Models\MealSession;
@@ -49,6 +50,13 @@ class StudentGuestMealController extends Controller
         $validated['status'] = 'pending';
 
         GuestMeal::create($validated);
+        NotificationHelper::sendToRole(
+            'manager',
+            'New Guest Meal Request',
+            auth()->user()->name . ' submitted a new guest meal request.',
+            route('manager.guest-meals.index'),
+            'guest_meal'
+        );
 
         return redirect()
             ->route('student.guest-meals.index')

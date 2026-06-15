@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\GatePass;
 use Illuminate\Http\Request;
@@ -44,6 +45,13 @@ class StudentGatePassController extends Controller
         $validated['status'] = 'pending';
 
         GatePass::create($validated);
+        NotificationHelper::sendToRole(
+            'manager',
+            'New Gate Pass Request',
+            auth()->user()->name . ' submitted a new gate pass request.',
+            route('manager.gate-passes.index'),
+            'gate_pass'
+        );
 
         return redirect()
             ->route('student.gate-passes.index')

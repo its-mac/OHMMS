@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
@@ -40,6 +41,13 @@ class ComplaintController extends Controller
         ]);
 
         $complaint->update($validated);
+        NotificationHelper::sendToUser(
+            $complaint->student->user_id,
+            'Complaint Status Updated',
+            'The status of your complaint has been updated to: ' . ucfirst($complaint->status) . '.',
+            route('student.complaints.index'),
+            'complaint'
+        );
 
         return redirect()
             ->route('manager.complaints.show', $complaint)

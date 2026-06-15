@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\LeaveRequest;
 use Illuminate\Http\Request;
@@ -44,7 +45,13 @@ class StudentLeaveRequestController extends Controller
         $validated['status'] = 'pending';
 
         LeaveRequest::create($validated);
-
+        NotificationHelper::sendToRole(
+            'manager',
+            'New Leave Request',
+            auth()->user()->name . ' submitted a new leave request.',
+            route('manager.leave-requests.index'),
+            'leave_request'
+        );
         return redirect()
             ->route('student.leave-requests.index')
             ->with('success', 'Leave request submitted successfully.');

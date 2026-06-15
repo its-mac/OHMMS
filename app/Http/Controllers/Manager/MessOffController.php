@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Manager;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\MessOff;
 use Illuminate\Http\Request;
@@ -39,6 +40,13 @@ class MessOffController extends Controller
     public function approve(MessOff $messOff)
     {
         $messOff->update(['status' => 'approved']);
+        NotificationHelper::sendToUser(
+            $messOff->student->user_id,
+            'Mess Off Approved',
+            'Your mess off request has been approved.',
+            route('student.mess-offs.index'),
+            'mess_off'
+        );
 
         return back()->with('success', 'Mess off request approved.');
     }
@@ -46,6 +54,13 @@ class MessOffController extends Controller
     public function reject(MessOff $messOff)
     {
         $messOff->update(['status' => 'rejected']);
+        NotificationHelper::sendToUser(
+            $messOff->student->user_id,
+            'Mess Off Rejected',
+            'Your mess off request has been rejected.',
+            route('student.mess-offs.index'),
+            'mess_off'
+        );
 
         return back()->with('success', 'Mess off request rejected.');
     }

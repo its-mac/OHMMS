@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\MessOff;
 use Illuminate\Http\Request;
@@ -42,6 +43,13 @@ class StudentMessOffController extends Controller
         $validated['status'] = 'pending';
 
         MessOff::create($validated);
+        NotificationHelper::sendToRole(
+            'manager',
+            'New Mess Off Request',
+            auth()->user()->name . ' submitted a new mess off request.',
+            route('manager.mess-offs.index'),
+            'mess_off'
+        );
 
         return redirect()
             ->route('student.mess-offs.index')

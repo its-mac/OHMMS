@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\NotificationHelper;
 use App\Models\GuestMeal;
 use App\Models\MealSession;
 use Illuminate\Http\Request;
@@ -43,6 +44,13 @@ class GuestMealController extends Controller
     public function approve(GuestMeal $guestMeal)
     {
         $guestMeal->update(['status' => 'approved']);
+        NotificationHelper::sendToUser(
+            $guestMeal->student->user_id,
+            'Guest Meal Approved',
+            'Your guest meal request has been approved.',
+            route('student.guest-meals.index'),
+            'guest_meal'
+        );
 
         return back()->with('success', 'Guest meal request approved.');
     }
@@ -50,6 +58,13 @@ class GuestMealController extends Controller
     public function reject(GuestMeal $guestMeal)
     {
         $guestMeal->update(['status' => 'rejected']);
+        NotificationHelper::sendToUser(
+            $guestMeal->student->user_id,
+            'Guest Meal Rejected',
+            'Your guest meal request has been rejected.',
+            route('student.guest-meals.index'),
+            'guest_meal'
+        );
 
         return back()->with('success', 'Guest meal request rejected.');
     }

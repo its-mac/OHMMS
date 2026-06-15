@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NotificationHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Complaint;
 use Illuminate\Http\Request;
@@ -42,6 +43,17 @@ class StudentComplaintController extends Controller
         $validated['status'] = 'pending';
 
         Complaint::create($validated);
+        NotificationHelper::sendToRole(
+            'manager',
+            'New Complaint Submitted',
+            auth()->user()->name . ' submitted a new complaint.',
+            route('manager.complaints.index'),
+            'complaint'
+        );
+
+        return redirect()
+            ->route('student.complaints.index')
+            ->with('success', 'Complaint submitted successfully.');
 
         return redirect()
             ->route('student.complaints.index')
