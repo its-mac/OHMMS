@@ -21,6 +21,8 @@ return new class extends Migration
             $table->decimal('amount', 10, 2);
             $table->date('payment_date');
             $table->enum('payment_method', ['cash', 'bank_transfer', 'jazzcash', 'easypaisa', 'cheque']);
+            $table->string('reference_no')->nullable();
+            $table->string('receipt')->nullable();
             $table->text('remarks')->nullable();
 
             $table->timestamps();

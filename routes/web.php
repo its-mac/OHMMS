@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\EscalatedComplaintController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\BlockController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\FloorController;
 use App\Http\Controllers\GuestMealController;
 use App\Http\Controllers\HostelController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\Manager\PaymentProofController;
 use App\Http\Controllers\MealSessionController;
 use App\Http\Controllers\MessMenuController;
 use App\Http\Controllers\PaymentController;
@@ -56,9 +58,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
     Route::post('/notifications/{notification}/read', [NotificationController::class, 'markAsRead'])
         ->name('notifications.read');
-
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
         ->name('notifications.read-all');
 
@@ -86,6 +89,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::resource('meal-sessions', MealSessionController::class);
             Route::resource('fee-structures', FeeStructureController::class);
 
+            Route::get('/complaints/escalated', [EscalatedComplaintController::class, 'index'])
+                ->name('complaints.escalated');
+
+            Route::get('/complaints/escalated/{complaint}', [EscalatedComplaintController::class, 'show'])
+                ->name('complaints.escalated.show');
+
+            Route::patch('/complaints/escalated/{complaint}/review', [EscalatedComplaintController::class, 'review'])
+                ->name('complaints.escalated.review');
+
             Route::delete('/students/{student}/fingerprints/{fingerIndex}', [StudentFingerprintController::class, 'destroy'])
                 ->name('students.fingerprints.destroy');
 
@@ -94,6 +106,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::get('/finance-reports/collections', [FinanceReportController::class, 'collections'])
                 ->name('finance-reports.collections');
+
+            Route::get('/reports/analytics', [AdminDashboardController::class, 'analytics'])
+                ->name('reports.analytics');
         });
 
     /*
@@ -116,6 +131,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::get('/logs', [AttendanceController::class, 'index'])->name('index');
                 Route::get('/today', [AttendanceController::class, 'today'])->name('today');
                 Route::get('/reports', [AttendanceController::class, 'reports'])->name('reports');
+                Route::get('/reports/export', [AttendanceController::class, 'exportReport'])
+                    ->name('reports.export');
             });
 
             Route::resource('mess-menus', MessMenuController::class);
@@ -180,6 +197,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/complaints/{complaint}/status', [ManagerComplaintController::class, 'updateStatus'])
                 ->name('complaints.update-status');
 
+            Route::patch('/complaints/{complaint}/escalate', [ManagerComplaintController::class, 'escalate'])
+                ->name('complaints.escalate');
+
             Route::get('/invoices', [InvoiceController::class, 'index'])
                 ->name('invoices.index');
 
@@ -201,11 +221,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/invoices/{invoice}/payments', [PaymentController::class, 'store'])
                 ->name('invoices.payments.store');
 
+            Route::get('/payment-proofs', [PaymentProofController::class, 'index'])
+                ->name('payment-proofs.index');
+
+            Route::get('/payment-proofs/{paymentProof}', [PaymentProofController::class, 'show'])
+                ->name('payment-proofs.show');
+
+            Route::patch('/payment-proofs/{paymentProof}/approve', [PaymentProofController::class, 'approve'])
+                ->name('payment-proofs.approve');
+
+            Route::patch('/payment-proofs/{paymentProof}/reject', [PaymentProofController::class, 'reject'])
+                ->name('payment-proofs.reject');
+
             Route::get('/finance-reports/defaulters', [FinanceReportController::class, 'defaulters'])
                 ->name('finance-reports.defaulters');
 
             Route::get('/finance-reports/collections', [FinanceReportController::class, 'collections'])
                 ->name('finance-reports.collections');
+
+            Route::get('/reports/analytics', [ManagerDashboardController::class, 'analytics'])
+                ->name('reports.analytics');
         });
 
     /*
@@ -255,6 +290,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::get('/fees', [StudentFeeController::class, 'index'])->name('fees.index');
             Route::get('/fees/{invoice}', [StudentFeeController::class, 'show'])->name('fees.show');
+            Route::post('/fees/{invoice}/payment-proof', [StudentFeeController::class, 'uploadPaymentProof'])
+                ->name('fees.payment-proof.upload');
         });
 });
 

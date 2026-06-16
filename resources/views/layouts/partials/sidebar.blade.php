@@ -103,6 +103,20 @@
                         <label>Monitoring & Reports</label>
                     </li>
 
+                    <li class="pc-item {{ request()->routeIs('admin.reports.analytics') ? 'active' : '' }}">
+                        <a href="{{ route('admin.reports.analytics') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chart-bar"></i></span>
+                            <span class="pc-mtext">Analytics Dashboard</span>
+                        </a>
+                    </li>
+
+                    <li class="pc-item {{ request()->routeIs('admin.complaints.escalated*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.complaints.escalated') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-warning-octagon"></i></span>
+                            <span class="pc-mtext">Escalated Complaints</span>
+                        </a>
+                    </li>
+
                     <li class="pc-item {{ request()->routeIs('admin.finance-reports.defaulters') ? 'active' : '' }}">
                         <a href="{{ route('admin.finance-reports.defaulters') }}" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-warning-circle"></i></span>
@@ -236,6 +250,17 @@
                         </a>
                     </li>
 
+                    <li class="pc-item {{ request()->routeIs('manager.payment-proofs.*') ? 'active' : '' }}">
+                        <a href="{{ route('manager.payment-proofs.index') }}" class="pc-link">
+                            <span class="pc-micon">
+                                <i class="ph ph-receipt"></i>
+                            </span>
+                            <span class="pc-mtext">
+                                Payment Proofs
+                            </span>
+                        </a>
+                    </li>
+
                     <li
                         class="pc-item {{ request()->routeIs('manager.finance-reports.defaulters') ? 'active' : '' }}">
                         <a href="{{ route('manager.finance-reports.defaulters') }}" class="pc-link">
@@ -243,7 +268,16 @@
                             <span class="pc-mtext">Defaulters</span>
                         </a>
                     </li>
+                    <li class="pc-item pc-caption">
+                        <label>Reports</label>
+                    </li>
 
+                    <li class="pc-item {{ request()->routeIs('manager.reports.analytics') ? 'active' : '' }}">
+                        <a href="{{ route('manager.reports.analytics') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-chart-bar"></i></span>
+                            <span class="pc-mtext">Reports & Analytics</span>
+                        </a>
+                    </li>
                     <li
                         class="pc-item {{ request()->routeIs('manager.finance-reports.collections') ? 'active' : '' }}">
                         <a href="{{ route('manager.finance-reports.collections') }}" class="pc-link">

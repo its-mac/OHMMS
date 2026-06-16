@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('registration_no')->unique();
             $table->string('name');
             $table->string('father_name')->nullable();
@@ -25,6 +26,14 @@ return new class extends Migration
             $table->string('room_no')->nullable();
 
             $table->string('phone')->nullable();
+            $table->string('email')->nullable()->unique();
+            $table->string('photo')->nullable();
+            $table->string('blood_group')->nullable();
+            $table->text('address')->nullable();
+            $table->string('guardian_name')->nullable();
+            $table->string('guardian_phone')->nullable();
+            $table->string('emergency_contact')->nullable();
+            $table->boolean('fingerprint_enrolled')->default(false);
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });

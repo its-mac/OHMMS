@@ -1,6 +1,9 @@
 <script src="{{ asset('assets/js/plugins/popper.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/simplebar.min.js') }}"></script>
 <script src="{{ asset('assets/js/plugins/bootstrap.min.js') }}"></script>
+
+<script src="{{ asset('assets/js/plugins/apexcharts.min.js') }}"></script>
+
 <script src="{{ asset('assets/js/script.js') }}"></script>
 <script src="{{ asset('assets/js/theme.js') }}"></script>
 

@@ -41,16 +41,45 @@ class ComplaintController extends Controller
         ]);
 
         $complaint->update($validated);
-        NotificationHelper::sendToUser(
-            $complaint->student->user_id,
-            'Complaint Status Updated',
-            'The status of your complaint has been updated to: ' . ucfirst($complaint->status) . '.',
-            route('student.complaints.index'),
-            'complaint'
-        );
+
+        if ($complaint->student?->user_id) {
+            NotificationHelper::sendToUser(
+                $complaint->student->user_id,
+                'Complaint Status Updated',
+                'The status of your complaint has been updated to: ' . ucfirst(str_replace('_', ' ', $complaint->status)) . '.',
+                route('student.complaints.index'),
+                'complaint'
+            );
+        }
 
         return redirect()
             ->route('manager.complaints.show', $complaint)
             ->with('success', 'Complaint status updated successfully.');
+    }
+
+    public function escalate(Request $request, Complaint $complaint)
+    {
+        $validated = $request->validate([
+            'escalation_reason' => ['required', 'string', 'max:2000'],
+        ]);
+
+        $complaint->update([
+            'is_escalated' => true,
+            'escalated_at' => now(),
+            'escalation_reason' => $validated['escalation_reason'],
+            'status' => 'in_progress',
+        ]);
+
+        NotificationHelper::sendToRole(
+            'admin',
+            'Complaint Escalated',
+            'A complaint has been escalated by the manager: ' . $complaint->subject,
+            route('admin.complaints.escalated'),
+            'complaint_escalation'
+        );
+
+        return redirect()
+            ->route('manager.complaints.show', $complaint)
+            ->with('success', 'Complaint escalated to Admin successfully.');
     }
 }

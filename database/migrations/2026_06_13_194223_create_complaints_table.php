@@ -23,7 +23,11 @@ return new class extends Migration
                 ->default('pending');
 
             $table->text('manager_response')->nullable();
-
+            $table->boolean('is_escalated')->default(false);
+            $table->timestamp('escalated_at')->nullable();
+            $table->text('escalation_reason')->nullable();
+            $table->text('admin_response')->nullable();
+            $table->timestamp('admin_reviewed_at')->nullable();
             $table->timestamps();
         });
     }

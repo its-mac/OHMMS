@@ -83,4 +83,9 @@ class Student extends Model
     {
         return $this->hasMany(Invoice::class);
     }
+
+    public function paymentProofs()
+    {
+        return $this->hasMany(PaymentProof::class);
+    }
 }

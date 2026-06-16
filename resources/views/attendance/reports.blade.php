@@ -1,139 +1,311 @@
 @extends('layouts.app', ['title' => 'Attendance Reports'])
 
 @section('content')
-    <div class="page-header">
+    @php
+        $attendancePercentage = $totalStudents > 0
+            ? round(($presentStudents / $totalStudents) * 100, 1)
+            : 0;
+
+        $selectedMeal = $mealSessionId
+            ? $mealSessions->firstWhere('id', $mealSessionId)?->name
+            : 'All Sessions';
+    @endphp
+
+    <style>
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #attendance-print-area,
+            #attendance-print-area * {
+                visibility: visible;
+            }
+
+            #attendance-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                padding: 25px;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            .pc-sidebar,
+            .pc-header,
+            .page-header {
+                display: none !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: none !important;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            .print-border {
+                border: 1px solid #000 !important;
+            }
+        }
+    </style>
+
+    <div class="page-header no-print">
         <div class="page-block">
             <h5 class="mb-0">Attendance Reports</h5>
+            <small class="text-muted">Daily meal attendance summary and student records</small>
         </div>
     </div>
 
-    <form method="GET" action="{{ route('manager.attendance.reports') }}" class="card mb-4">
+    <div class="card no-print">
+        <div class="card-header">
+            <h5 class="mb-0">Generate Attendance Report</h5>
+        </div>
+
         <div class="card-body">
-            <div class="row align-items-end">
-                <div class="col-md-4 mb-3">
+            <form method="GET" action="{{ route('manager.attendance.reports') }}" class="row align-items-end">
+                <div class="col-md-3 mb-3">
                     <label class="form-label">Date</label>
                     <input type="date" name="date" class="form-control" value="{{ $date }}">
                 </div>
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-3 mb-3">
                     <label class="form-label">Meal Session</label>
                     <select name="meal_session_id" class="form-select">
                         <option value="">All Sessions</option>
+
                         @foreach ($mealSessions as $session)
-                            <option value="{{ $session->id }}" {{ $mealSessionId == $session->id ? 'selected' : '' }}>
+                            <option value="{{ $session->id }}" @selected($mealSessionId == $session->id)>
                                 {{ $session->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
 
-                <div class="col-md-4 mb-3">
+                <div class="col-md-6 mb-3">
                     <button class="btn btn-primary">
+                        <i class="ph ph-funnel me-1"></i>
                         Generate Report
                     </button>
-                </div>
-            </div>
-        </div>
-    </form>
 
-    <div class="row">
-        <div class="col-md-4">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <h6 class="text-white">Total Active Students</h6>
-                    <h3 class="text-white mb-0">{{ $totalStudents }}</h3>
-                </div>
-            </div>
-        </div>
+                    <a href="{{ route('manager.attendance.reports') }}" class="btn btn-light">
+                        Reset
+                    </a>
 
-        <div class="col-md-4">
-            <div class="card bg-success">
-                <div class="card-body">
-                    <h6 class="text-white">Present</h6>
-                    <h3 class="text-white mb-0">{{ $presentStudents }}</h3>
-                </div>
-            </div>
-        </div>
+                    <button type="button" onclick="window.print()" class="btn btn-outline-secondary">
+                        <i class="ph ph-printer me-1"></i>
+                        Print
+                    </button>
 
-        <div class="col-md-4">
-            <div class="card bg-danger">
-                <div class="card-body">
-                    <h6 class="text-white">Absent</h6>
-                    <h3 class="text-white mb-0">{{ $absentStudents }}</h3>
+                    <a href="{{ route('manager.attendance.reports.export', request()->query()) }}"
+                       class="btn btn-outline-success">
+                        <i class="ph ph-download-simple me-1"></i>
+                        Export CSV
+                    </a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5>Meal-wise Summary</h5>
-        </div>
+    <div id="attendance-print-area">
+        <div class="d-none d-print-block mb-4">
+            <div class="text-center">
+                <h3 class="mb-0">OHMMS</h3>
+                <p class="mb-1">Online Hostel & Mess Management System</p>
+                <h5>Daily Attendance Report</h5>
+            </div>
 
-        <div class="card-body">
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Meal Session</th>
-                        <th>Total Attendance</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($mealWiseCounts as $item)
-                        <tr>
-                            <td>{{ $item->mealSession?->name ?? '-' }}</td>
-                            <td>{{ $item->total }}</td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="2" class="text-center text-muted">No attendance found.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
+            <table class="table table-bordered mt-3">
+                <tr>
+                    <th width="180">Report Date</th>
+                    <td>{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</td>
+                    <th width="180">Meal Session</th>
+                    <td>{{ $selectedMeal }}</td>
+                </tr>
+
+                <tr>
+                    <th>Generated By</th>
+                    <td>{{ auth()->user()->name }}</td>
+                    <th>Generated At</th>
+                    <td>{{ now()->format('d M Y h:i A') }}</td>
+                </tr>
             </table>
         </div>
-    </div>
 
-    <div class="card mt-4">
-        <div class="card-header">
-            <h5>Attendance Details</h5>
+        <div class="row mt-3">
+            <div class="col-md-3">
+                <div class="card bg-primary">
+                    <div class="card-body text-white">
+                        <h6 class="text-white">Active Students</h6>
+                        <h3 class="text-white mb-0">{{ $totalStudents }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-success">
+                    <div class="card-body text-white">
+                        <h6 class="text-white">Present</h6>
+                        <h3 class="text-white mb-0">{{ $presentStudents }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-danger">
+                    <div class="card-body text-white">
+                        <h6 class="text-white">Absent</h6>
+                        <h3 class="text-white mb-0">{{ $absentStudents }}</h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card bg-info">
+                    <div class="card-body text-white">
+                        <h6 class="text-white">Attendance %</h6>
+                        <h3 class="text-white mb-0">{{ $attendancePercentage }}%</h3>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="card-body table-border-style">
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Time</th>
-                            <th>Reg No</th>
-                            <th>Student</th>
-                            <th>Meal</th>
-                            <th>Method</th>
-                        </tr>
-                    </thead>
+        <div class="row mt-3 no-print">
+            <div class="col-md-5">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Meal-wise Summary</h5>
+                    </div>
 
-                    <tbody>
-                        @forelse($logs as $log)
+                    <div class="card-body">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Meal Session</th>
+                                    <th>Total Attendance</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse($mealWiseCounts as $item)
+                                    <tr>
+                                        <td>
+                                            <span class="badge bg-primary">
+                                                {{ $item->mealSession?->name ?? '-' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $item->total }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="2">
+                                            <x-empty-state title="No attendance found" message="No meal-wise attendance available." />
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-7">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5 class="mb-0">Report Summary</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <h6>Selected Date</h6>
+                        <h4>{{ \Carbon\Carbon::parse($date)->format('d M Y') }}</h4>
+
+                        <hr>
+
+                        <h6>Attendance Rate</h6>
+                        <h3>{{ $attendancePercentage }}%</h3>
+
+                        <div class="progress mt-2" style="height: 8px;">
+                            <div class="progress-bar bg-success" style="width: {{ $attendancePercentage }}%"></div>
+                        </div>
+
+                        <p class="text-muted mt-3 mb-0">
+                            {{ $presentStudents }} out of {{ $totalStudents }} active students attended
+                            {{ $mealSessionId ? 'the selected meal session' : 'at least one meal session' }}
+                            on this date.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mt-4">
+            <div class="card-header d-flex justify-content-between align-items-center no-print">
+                <h5 class="mb-0">Attendance Details</h5>
+
+                <a href="{{ route('manager.attendance.index') }}" class="btn btn-sm btn-light">
+                    View All Logs
+                </a>
+            </div>
+
+            <div class="card-body table-border-style">
+                <div class="d-none d-print-block mb-2">
+                    <h5 class="mb-0">Attendance Details</h5>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover table-bordered">
+                        <thead class="table-light">
                             <tr>
-                                <td>{{ $log->attendance_time }}</td>
-                                <td>{{ $log->student?->registration_no ?? '-' }}</td>
-                                <td>{{ $log->student?->name ?? '-' }}</td>
-                                <td>{{ $log->mealSession?->name ?? '-' }}</td>
-                                <td>
-                                    <span class="badge bg-success">
-                                        {{ ucfirst($log->verification_method) }}
-                                    </span>
-                                </td>
+                                <th>#</th>
+                                <th>Time</th>
+                                <th>Reg No</th>
+                                <th>Student</th>
+                                <th>Meal</th>
+                                <th>Method</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center text-muted">
-                                    No records found for selected filters.
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+                        </thead>
+
+                        <tbody>
+                            @forelse($logs as $log)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($log->attendance_time)->format('h:i A') }}</td>
+                                    <td>{{ $log->student?->registration_no ?? '-' }}</td>
+                                    <td>{{ $log->student?->name ?? '-' }}</td>
+                                    <td>{{ $log->mealSession?->name ?? '-' }}</td>
+                                    <td>{{ ucfirst($log->verification_method ?? '-') }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">
+                                        No records found for selected filters.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-none d-print-block mt-5">
+                    <div class="row">
+                        <div class="col-6">
+                            <p><strong>Prepared By:</strong> ________________________</p>
+                        </div>
+
+                        <div class="col-6 text-end">
+                            <p><strong>Manager Signature:</strong> ________________________</p>
+                        </div>
+                    </div>
+
+                    <small>
+                        This report was generated by OHMMS on {{ now()->format('d M Y h:i A') }}.
+                    </small>
+                </div>
             </div>
         </div>
     </div>

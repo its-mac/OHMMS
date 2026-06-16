@@ -68,72 +68,60 @@
                         @endif
                     </a>
 
-                    <div class="dropdown-menu dropdown-notification dropdown-menu-end pc-h-dropdown">
-                        <div class="dropdown-header d-flex align-items-center justify-content-between">
-                            <h5 class="m-0">Notifications</h5>
+                    <div class="dropdown-menu dropdown-menu-end pc-h-dropdown p-0"
+                        style="width: 360px; border-radius: 10px; overflow: hidden;">
 
-                            @if ($unreadNotificationCount > 0)
-                                <form method="POST" action="{{ route('notifications.read-all') }}">
-                                    @csrf
-                                    <button type="submit" class="btn btn-link btn-sm">
-                                        Mark all read
-                                    </button>
-                                </form>
-                            @endif
+                        <div class="d-flex align-items-center justify-content-between px-3 py-3 border-bottom">
+                            <h6 class="mb-0 fw-semibold">Notifications</h6>
                         </div>
 
-                        <div class="dropdown-body text-wrap header-notification-scroll position-relative"
-                            style="max-height: calc(100vh - 215px)">
-
+                        <div style="max-height: 360px; overflow-y: auto;">
                             @forelse ($unreadNotifications as $notification)
                                 <form method="POST" action="{{ route('notifications.read', $notification) }}">
                                     @csrf
 
-                                    <button type="submit"
-                                        class="dropdown-item p-0 border-0 bg-transparent w-100 text-start">
-                                        <div class="card bg-transparent mb-2 border-0">
-                                            <div class="card-body p-3 rounded"
-                                                style="background: rgba(var(--bs-light-rgb), 0.3); transition: all 0.2s ease;"
-                                                onmouseover="this.style.background='rgba(var(--bs-primary-rgb), 0.05)'"
-                                                onmouseout="this.style.background='rgba(var(--bs-light-rgb), 0.3)'">
-
-                                                <div class="d-flex">
-                                                    <div class="flex-shrink-0">
-                                                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center"
-                                                            style="width: 40px; height: 40px;">
-                                                            <i class="ph ph-bell text-primary"
-                                                                style="font-size: 16px;"></i>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="flex-grow-1 ms-3">
-                                                        <span class="float-end text-sm text-muted">
-                                                            {{ $notification->created_at->diffForHumans() }}
-                                                        </span>
-
-                                                        <h5 class="text-body mb-2">
-                                                            {{ $notification->title }}
-                                                        </h5>
-
-                                                        <p class="mb-0">
-                                                            {{ $notification->message }}
-                                                        </p>
-                                                    </div>
+                                    <button type="submit" class="w-100 border-0 bg-transparent text-start p-0">
+                                        <div class="d-flex gap-3 px-3 py-3 border-bottom notification-dropdown-item">
+                                            <div class="flex-shrink-0">
+                                                <div class="rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
+                                                    style="width: 38px; height: 38px;">
+                                                    <i class="ph ph-bell" style="font-size: 18px;"></i>
                                                 </div>
+                                            </div>
+
+                                            <div class="flex-grow-1 overflow-hidden">
+                                                <div class="d-flex justify-content-between align-items-start gap-2">
+                                                    <h6 class="mb-1 text-truncate fw-semibold">
+                                                        {{ $notification->title }}
+                                                    </h6>
+
+                                                    <span class="rounded-circle bg-primary flex-shrink-0 mt-1"
+                                                        style="width: 8px; height: 8px;"></span>
+                                                </div>
+
+                                                <p class="mb-1 text-muted text-truncate">
+                                                    {{ $notification->message }}
+                                                </p>
+
+                                                <small class="text-muted">
+                                                    {{ $notification->created_at->diffForHumans() }}
+                                                </small>
                                             </div>
                                         </div>
                                     </button>
                                 </form>
                             @empty
                                 <div class="text-center py-4">
-                                    <i class="ph ph-bell-slash d-block mb-2" style="font-size: 28px;"></i>
+                                    <i class="ph ph-bell-slash d-block mb-2 text-muted" style="font-size: 30px;"></i>
                                     <p class="mb-0 text-muted">No new notifications</p>
                                 </div>
                             @endforelse
                         </div>
 
-                        <div class="text-center py-2">
-                            <a href="#!" class="link-primary">View all Notifications</a>
+                        <div class="border-top p-2 text-center">
+                            <a href="{{ route('notifications.index') }}" class="btn btn-link btn-sm text-primary w-100">
+                                View all notifications
+                            </a>
                         </div>
                     </div>
                 </li>
@@ -177,3 +165,15 @@
         </div>
     </div>
 </header>
+
+@push('page-css')
+    <style>
+        .notification-dropdown-item {
+            transition: background 0.2s ease;
+        }
+
+        .notification-dropdown-item:hover {
+            background: rgba(var(--bs-primary-rgb), 0.05);
+        }
+    </style>
+@endpush

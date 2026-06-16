@@ -54,10 +54,6 @@ class StudentComplaintController extends Controller
         return redirect()
             ->route('student.complaints.index')
             ->with('success', 'Complaint submitted successfully.');
-
-        return redirect()
-            ->route('student.complaints.index')
-            ->with('success', 'Complaint submitted successfully.');
     }
 
     public function show(Complaint $complaint)

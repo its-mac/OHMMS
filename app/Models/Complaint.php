@@ -13,6 +13,17 @@ class Complaint extends Model
         'description',
         'status',
         'manager_response',
+        'is_escalated',
+        'escalated_at',
+        'escalation_reason',
+        'admin_response',
+        'admin_reviewed_at',
+    ];
+
+    protected $casts = [
+        'is_escalated' => 'boolean',
+        'escalated_at' => 'datetime',
+        'admin_reviewed_at' => 'datetime',
     ];
 
     public function student()
