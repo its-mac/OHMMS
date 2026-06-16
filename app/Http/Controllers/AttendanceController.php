@@ -65,47 +65,85 @@ class AttendanceController extends Controller
             ->paginate(20)
             ->withQueryString();
 
+        $dateRangeTotal = AttendanceLog::count();
+
+        $todayAttendance = AttendanceLog::whereDate(
+            'attendance_date',
+            today()
+        )->count();
+
+        $activeStudents = Student::where('status', 'active')->count();
+
+        $todayRate = $activeStudents > 0
+            ? round(($todayAttendance / $activeStudents) * 100, 1)
+            : 0;
+
+        $last7DaysLabels = [];
+        $last7DaysData = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+
+            $date = today()->subDays($i);
+
+            $last7DaysLabels[] = $date->format('d M');
+
+            $last7DaysData[] = AttendanceLog::whereDate(
+                'attendance_date',
+                $date
+            )->count();
+        }
+
         return view('attendance.index', compact(
             'logs',
             'mealSessions',
             'filteredTotal',
             'fingerprintTotal',
-            'manualTotal'
+            'manualTotal',
+            'dateRangeTotal',
+            'todayAttendance',
+            'todayRate',
+            'last7DaysLabels',
+            'last7DaysData',
         ));
     }
 
     public function today()
     {
-        $logs = AttendanceLog::with([
-            'student',
-            'mealSession'
-        ])
+        $logs = AttendanceLog::with(['student', 'mealSession'])
             ->whereDate('attendance_date', today())
             ->latest()
             ->get();
 
         $totalToday = $logs->count();
 
-        $mealWiseCounts = AttendanceLog::select(
-            'meal_session_id',
-            DB::raw('count(*) as total')
-        )
+        $mealWiseCounts = AttendanceLog::select('meal_session_id', DB::raw('count(*) as total'))
             ->with('mealSession')
             ->whereDate('attendance_date', today())
             ->groupBy('meal_session_id')
             ->get();
 
-        $breakfastCount = $mealWiseCounts
-            ->firstWhere('mealSession.name', 'Breakfast')
-            ?->total ?? 0;
+        $breakfastCount = $mealWiseCounts->firstWhere('mealSession.name', 'Breakfast')?->total ?? 0;
+        $lunchCount = $mealWiseCounts->firstWhere('mealSession.name', 'Lunch')?->total ?? 0;
+        $dinnerCount = $mealWiseCounts->firstWhere('mealSession.name', 'Dinner')?->total ?? 0;
 
-        $lunchCount = $mealWiseCounts
-            ->firstWhere('mealSession.name', 'Lunch')
-            ?->total ?? 0;
+        $methodLabels = ['Fingerprint', 'Manual'];
+        $methodData = [
+            $logs->where('verification_method', 'fingerprint')->count(),
+            $logs->where('verification_method', 'manual')->count(),
+        ];
 
-        $dinnerCount = $mealWiseCounts
-            ->firstWhere('mealSession.name', 'Dinner')
-            ?->total ?? 0;
+        $mealChartLabels = $mealWiseCounts->map(fn($item) => $item->mealSession?->name ?? 'Unknown')->values();
+        $mealChartData = $mealWiseCounts->pluck('total')->values();
+
+        $trendLabels = [];
+        $trendData = [];
+
+        for ($i = 6; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+
+            $trendLabels[] = $date->format('d M');
+            $trendData[] = AttendanceLog::whereDate('attendance_date', $date)->count();
+        }
 
         return view('attendance.today', compact(
             'logs',
@@ -113,7 +151,13 @@ class AttendanceController extends Controller
             'mealWiseCounts',
             'breakfastCount',
             'lunchCount',
-            'dinnerCount'
+            'dinnerCount',
+            'methodLabels',
+            'methodData',
+            'mealChartLabels',
+            'mealChartData',
+            'trendLabels',
+            'trendData'
         ));
     }
 

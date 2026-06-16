@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Student;
 use App\Http\Controllers\Controller;
 use App\Models\AttendanceLog;
 use App\Models\MealSession;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class StudentAttendanceController extends Controller
@@ -45,12 +46,56 @@ class StudentAttendanceController extends Controller
             ->whereYear('attendance_date', now()->year)
             ->count();
 
+        $todayMeals = AttendanceLog::where('student_id', $student->id)
+            ->whereDate('attendance_date', today())
+            ->count();
+
+        $activeMealSessions = $mealSessions->count();
+        $daysInMonthTillToday = now()->day;
+        $expectedMealsThisMonth = max(1, $activeMealSessions * $daysInMonthTillToday);
+
+        $monthlyAttendancePercentage = round(($monthlyMeals / $expectedMealsThisMonth) * 100, 1);
+
+        $mealWiseSummary = AttendanceLog::selectRaw('meal_session_id, COUNT(*) as total')
+            ->with('mealSession')
+            ->where('student_id', $student->id)
+            ->groupBy('meal_session_id')
+            ->get();
+
+        $attendanceTrendLabels = [];
+        $attendanceTrendData = [];
+
+        for ($i = 29; $i >= 0; $i--) {
+            $date = today()->subDays($i);
+
+            $attendanceTrendLabels[] = $date->format('d M');
+
+            $attendanceTrendData[] = AttendanceLog::where('student_id', $student->id)
+                ->whereDate('attendance_date', $date)
+                ->count();
+        }
+
+        $mealChartLabels = $mealWiseSummary
+            ->map(fn($item) => $item->mealSession?->name ?? 'Unknown')
+            ->values();
+
+        $mealChartData = $mealWiseSummary
+            ->pluck('total')
+            ->values();
+
         return view('student.attendance.index', compact(
             'student',
             'attendanceLogs',
             'mealSessions',
             'totalMeals',
-            'monthlyMeals'
+            'monthlyMeals',
+            'todayMeals',
+            'monthlyAttendancePercentage',
+            'mealWiseSummary',
+            'attendanceTrendLabels',
+            'attendanceTrendData',
+            'mealChartLabels',
+            'mealChartData'
         ));
     }
 }

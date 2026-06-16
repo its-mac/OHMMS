@@ -33,6 +33,7 @@ use App\Http\Controllers\Student\StudentLeaveRequestController;
 use App\Http\Controllers\Student\StudentMessMenuController;
 use App\Http\Controllers\Student\StudentMessOffController;
 use App\Http\Controllers\Student\StudentProfileController;
+use App\Http\Controllers\Student\StudentRequestCenterController;
 use App\Http\Controllers\Student\StudentRoomController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentDashboardController;
@@ -292,6 +293,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/fees/{invoice}', [StudentFeeController::class, 'show'])->name('fees.show');
             Route::post('/fees/{invoice}/payment-proof', [StudentFeeController::class, 'uploadPaymentProof'])
                 ->name('fees.payment-proof.upload');
+
+            Route::get('/requests', [StudentRequestCenterController::class, 'index'])
+                ->name('requests.index');
         });
 });
 

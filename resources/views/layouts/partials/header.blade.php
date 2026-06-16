@@ -85,7 +85,8 @@
                                             <div class="flex-shrink-0">
                                                 <div class="rounded-circle d-flex align-items-center justify-content-center bg-primary bg-opacity-10 text-primary"
                                                     style="width: 38px; height: 38px;">
-                                                    <i class="ph ph-bell" style="font-size: 18px;"></i>
+                                                    <i class="ph {{ \App\Helpers\NotificationHelper::icon($notification->type) }}"
+                                                        style="font-size: 18px;"></i>
                                                 </div>
                                             </div>
 

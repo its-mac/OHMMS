@@ -328,6 +328,13 @@
                         <label>Requests</label>
                     </li>
 
+                    <li class="pc-item {{ request()->routeIs('student.requests.*') ? 'active' : '' }}">
+                        <a href="{{ route('student.requests.index') }}" class="pc-link">
+                            <span class="pc-micon"><i class="ph ph-squares-four"></i></span>
+                            <span class="pc-mtext">Request Center</span>
+                        </a>
+                    </li>
+
                     <li class="pc-item {{ request()->routeIs('student.mess-offs.*') ? 'active' : '' }}">
                         <a href="{{ route('student.mess-offs.index') }}" class="pc-link">
                             <span class="pc-micon"><i class="ph ph-calendar-x"></i></span>

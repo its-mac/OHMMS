@@ -32,4 +32,20 @@ class NotificationHelper
             'url' => $url,
         ]);
     }
+
+    public static function icon(?string $type = null): string
+    {
+        return match ($type) {
+            'complaint' => 'ph-warning-circle',
+            'complaint_escalation' => 'ph-warning-octagon',
+            'fee' => 'ph-money',
+            'payment_proof' => 'ph-receipt',
+            'attendance' => 'ph-fingerprint',
+            'guest_meal' => 'ph-fork-knife',
+            'leave_request' => 'ph-airplane-takeoff',
+            'gate_pass' => 'ph-door-open',
+            'mess_off' => 'ph-calendar-x',
+            default => 'ph-bell',
+        };
+    }
 }
