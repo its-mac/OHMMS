@@ -11,63 +11,23 @@
     <div class="row">
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Total Hostels</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $totalHostels }}</h3>
-                            <p class="text-white-50 mb-0">Infrastructure units</p>
-                        </div>
-                        <i class="ph ph-buildings text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Total Hostels" :value="$totalHostels" subtitle="Infrastructure units" icon="ph ph-buildings"
+                color="primary" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-success">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Total Managers</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $totalManagers }}</h3>
-                            <p class="text-white-50 mb-0">Operational staff</p>
-                        </div>
-                        <i class="ph ph-users-three text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Total Managers" :value="$totalManagers" subtitle="Operational staff" icon="ph ph-users-three"
+                color="success" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Total Students</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $totalStudents }}</h3>
-                            <p class="text-white-50 mb-0">Registered residents</p>
-                        </div>
-                        <i class="ph ph-student text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Total Students" :value="$totalStudents" subtitle="Registered residents" icon="ph ph-student"
+                color="warning" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-info">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Attendance Today</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $todayAttendance }}</h3>
-                            <p class="text-white-50 mb-0">Meal attendance logs</p>
-                        </div>
-                        <i class="ph ph-fingerprint text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Attendance Today" :value="$todayAttendance" subtitle="Meal attendance logs" icon="ph ph-fingerprint"
+                color="info" />
         </div>
 
     </div>
@@ -123,31 +83,19 @@
                     <div class="row">
 
                         <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <h6>Total Generated</h6>
-                                <h4>Rs. {{ number_format($totalGenerated, 2) }}</h4>
-                            </div>
+                            <x-stat-box :value="'Rs. ' . number_format($totalGenerated, 2)" label="Total Generated" />
                         </div>
 
                         <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <h6>Total Revenue</h6>
-                                <h4>Rs. {{ number_format($totalRevenue, 2) }}</h4>
-                            </div>
+                            <x-stat-box :value="'Rs. ' . number_format($totalRevenue, 2)" label="Total Revenue" />
                         </div>
 
                         <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <h6>Outstanding</h6>
-                                <h4>Rs. {{ number_format($outstandingAmount, 2) }}</h4>
-                            </div>
+                            <x-stat-box :value="'Rs. ' . number_format($outstandingAmount, 2)" label="Outstanding" />
                         </div>
 
                         <div class="col-md-3">
-                            <div class="border rounded p-3">
-                                <h6>Defaulters</h6>
-                                <h4>{{ $defaultersCount }}</h4>
-                            </div>
+                            <x-stat-box :value="$defaultersCount" label="Defaulters" />
                         </div>
 
                     </div>
@@ -164,37 +112,21 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Escalated Complaints</h6>
-                            <small class="text-muted">Require admin attention</small>
-                        </div>
+                    <x-summary-row title="Escalated Complaints" subtitle="Require admin attention">
                         <span class="badge bg-danger">{{ $escalatedComplaints }}</span>
-                    </div>
+                    </x-summary-row>
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Complaints This Month</h6>
-                            <small class="text-muted">All complaint activity</small>
-                        </div>
+                    <x-summary-row title="Complaints This Month" subtitle="All complaint activity">
                         <span class="badge bg-warning">{{ $complaintsThisMonth }}</span>
-                    </div>
+                    </x-summary-row>
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Paid Invoices</h6>
-                            <small class="text-muted">Completed payments</small>
-                        </div>
+                    <x-summary-row title="Paid Invoices" subtitle="Completed payments">
                         <span class="badge bg-success">{{ $paidInvoices }}</span>
-                    </div>
+                    </x-summary-row>
 
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-1">Unpaid / Partial Invoices</h6>
-                            <small class="text-muted">Pending receivables</small>
-                        </div>
+                    <x-summary-row title="Unpaid / Partial Invoices" subtitle="Pending receivables">
                         <span class="badge bg-danger">{{ $unpaidInvoices }}</span>
-                    </div>
+                    </x-summary-row>
 
                 </div>
             </div>
@@ -205,27 +137,11 @@
     <div class="row mt-3">
 
         <div class="col-xl-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Monthly Revenue Trend</h5>
-                </div>
-
-                <div class="card-body">
-                    <div id="monthly-revenue-chart" style="height: 320px;"></div>
-                </div>
-            </div>
+            <x-chart-card title="Monthly Revenue Trend" chart-id="monthly-revenue-chart" />
         </div>
 
         <div class="col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Complaint Status Summary</h5>
-                </div>
-
-                <div class="card-body">
-                    <div id="complaint-status-chart" style="height: 320px;"></div>
-                </div>
-            </div>
+            <x-chart-card title="Complaint Status Summary" chart-id="complaint-status-chart" />
         </div>
 
     </div>
@@ -241,33 +157,29 @@
                     <div class="row">
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('admin.managers.index') }}" class="btn btn-outline-primary w-100 p-3">
-                                <i class="ph ph-users-three d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('admin.managers.index')" color="primary" icon="ph ph-users-three" class="p-3">
                                 Manage Managers
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('admin.students.index') }}" class="btn btn-outline-success w-100 p-3">
-                                <i class="ph ph-student d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('admin.students.index')" color="success" icon="ph ph-student" class="p-3">
                                 Manage Students
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('admin.fee-structures.index') }}"
-                                class="btn btn-outline-warning w-100 p-3">
-                                <i class="ph ph-money d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('admin.fee-structures.index')" color="warning" icon="ph ph-money" class="p-3">
                                 Fee Structures
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('admin.reports.analytics') }}" class="btn btn-outline-info w-100 p-3">
-                                <i class="ph ph-chart-bar d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('admin.reports.analytics')" color="info" icon="ph ph-chart-bar" class="p-3">
                                 Analytics Dashboard
-                            </a>
+                            </x-action-button>
                         </div>
+
                     </div>
                 </div>
             </div>

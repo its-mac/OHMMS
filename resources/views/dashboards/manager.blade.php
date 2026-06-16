@@ -95,55 +95,23 @@
                     <div class="row">
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="border rounded p-3 text-center h-100">
-                                <i class="ph ph-users-three d-block mb-2 text-primary" style="font-size: 28px;"></i>
-                                <h4>{{ $pendingGuestMeals }}</h4>
-                                <small class="text-muted">Guest Meals</small>
-                                <div class="mt-2">
-                                    <a href="{{ route('manager.guest-meals.index') }}" class="btn btn-sm btn-light">
-                                        Review
-                                    </a>
-                                </div>
-                            </div>
+                            <x-stat-box :value="$pendingGuestMeals" label="Guest Meals" icon="ph ph-users-three" color="primary"
+                                :href="route('manager.guest-meals.index')" button="Review" />
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="border rounded p-3 text-center h-100">
-                                <i class="ph ph-calendar-x d-block mb-2 text-warning" style="font-size: 28px;"></i>
-                                <h4>{{ $pendingMessOffs }}</h4>
-                                <small class="text-muted">Mess Offs</small>
-                                <div class="mt-2">
-                                    <a href="{{ route('manager.mess-offs.index') }}" class="btn btn-sm btn-light">
-                                        Review
-                                    </a>
-                                </div>
-                            </div>
+                            <x-stat-box :value="$pendingMessOffs" label="Mess Offs" icon="ph ph-calendar-x" color="warning"
+                                :href="route('manager.mess-offs.index')" button="Review" />
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="border rounded p-3 text-center h-100">
-                                <i class="ph ph-calendar-check d-block mb-2 text-success" style="font-size: 28px;"></i>
-                                <h4>{{ $pendingLeaveRequests }}</h4>
-                                <small class="text-muted">Leave Requests</small>
-                                <div class="mt-2">
-                                    <a href="{{ route('manager.leave-requests.index') }}" class="btn btn-sm btn-light">
-                                        Review
-                                    </a>
-                                </div>
-                            </div>
+                            <x-stat-box :value="$pendingLeaveRequests" label="Leave Requests" icon="ph ph-calendar-check" color="success"
+                                :href="route('manager.leave-requests.index')" button="Review" />
                         </div>
 
                         <div class="col-md-3 col-6 mb-3">
-                            <div class="border rounded p-3 text-center h-100">
-                                <i class="ph ph-door-open d-block mb-2 text-info" style="font-size: 28px;"></i>
-                                <h4>{{ $pendingGatePasses }}</h4>
-                                <small class="text-muted">Gate Passes</small>
-                                <div class="mt-2">
-                                    <a href="{{ route('manager.gate-passes.index') }}" class="btn btn-sm btn-light">
-                                        Review
-                                    </a>
-                                </div>
-                            </div>
+                            <x-stat-box :value="$pendingGatePasses" label="Gate Passes" icon="ph ph-door-open" color="info"
+                                :href="route('manager.gate-passes.index')" button="Review" />
                         </div>
 
                     </div>
@@ -205,29 +173,17 @@
 
                 <div class="card-body">
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Today's Collection</h6>
-                            <small class="text-muted">Payments received today</small>
-                        </div>
+                    <x-summary-row title="Today's Collection" subtitle="Payments received today">
                         <h5 class="mb-0">Rs. {{ number_format($todayCollection, 2) }}</h5>
-                    </div>
+                    </x-summary-row>
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Outstanding Amount</h6>
-                            <small class="text-muted">Unpaid / partial dues</small>
-                        </div>
+                    <x-summary-row title="Outstanding Amount" subtitle="Unpaid / partial dues">
                         <h5 class="mb-0">Rs. {{ number_format($outstandingAmount, 2) }}</h5>
-                    </div>
+                    </x-summary-row>
 
-                    <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3">
-                        <div>
-                            <h6 class="mb-1">Pending Invoices</h6>
-                            <small class="text-muted">Require payment follow-up</small>
-                        </div>
+                    <x-summary-row title="Pending Invoices" subtitle="Require payment follow-up">
                         <span class="badge bg-danger">{{ $pendingInvoices }}</span>
-                    </div>
+                    </x-summary-row>
 
                     <div class="row mt-3">
                         <div class="col-6">
@@ -259,27 +215,11 @@
     <div class="row mt-3">
 
         <div class="col-xl-8">
-            <div class="card">
-                <div class="card-header">
-                    <h5>7-Day Attendance Trend</h5>
-                </div>
-
-                <div class="card-body">
-                    <div id="manager-attendance-chart" style="height: 320px;"></div>
-                </div>
-            </div>
+            <x-chart-card title="7-Day Attendance Trend" chart-id="manager-attendance-chart" />
         </div>
 
         <div class="col-xl-4">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Pending Request Summary</h5>
-                </div>
-
-                <div class="card-body">
-                    <div id="manager-request-chart" style="height: 320px;"></div>
-                </div>
-            </div>
+            <x-chart-card title="Pending Request Summary" chart-id="manager-request-chart" />
         </div>
 
     </div>
@@ -296,33 +236,27 @@
                     <div class="row">
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('manager.attendance.scan') }}" class="btn btn-outline-primary w-100 p-3">
-                                <i class="ph ph-fingerprint d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('manager.attendance.scan')" color="primary" icon="ph ph-fingerprint" class="p-3">
                                 Scan Attendance
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('manager.payment-proofs.index') }}"
-                                class="btn btn-outline-success w-100 p-3">
-                                <i class="ph ph-receipt d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('manager.payment-proofs.index')" color="success" icon="ph ph-receipt" class="p-3">
                                 Verify Payments
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('manager.room-allocations.index') }}"
-                                class="btn btn-outline-warning w-100 p-3">
-                                <i class="ph ph-user-switch d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('manager.room-allocations.index')" color="warning" icon="ph ph-user-switch" class="p-3">
                                 Room Allocations
-                            </a>
+                            </x-action-button>
                         </div>
 
                         <div class="col-md-3 mb-3">
-                            <a href="{{ route('manager.reports.analytics') }}" class="btn btn-outline-info w-100 p-3">
-                                <i class="ph ph-chart-bar d-block mb-2" style="font-size: 28px;"></i>
+                            <x-action-button :href="route('manager.reports.analytics')" color="info" icon="ph ph-chart-bar" class="p-3">
                                 Reports & Analytics
-                            </a>
+                            </x-action-button>
                         </div>
 
                     </div>
@@ -334,41 +268,43 @@
 @endsection
 
 @push('page-scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        new ApexCharts(document.querySelector("#manager-attendance-chart"), {
-            chart: {
-                type: 'area',
-                height: 320,
-                toolbar: { show: false }
-            },
-            series: [{
-                name: 'Attendance',
-                data: @json($attendanceTrendData)
-            }],
-            xaxis: {
-                categories: @json($attendanceTrendLabels)
-            },
-            dataLabels: {
-                enabled: false
-            },
-            stroke: {
-                curve: 'smooth',
-                width: 3
-            }
-        }).render();
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            new ApexCharts(document.querySelector("#manager-attendance-chart"), {
+                chart: {
+                    type: 'area',
+                    height: 320,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                series: [{
+                    name: 'Attendance',
+                    data: @json($attendanceTrendData)
+                }],
+                xaxis: {
+                    categories: @json($attendanceTrendLabels)
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                }
+            }).render();
 
-        new ApexCharts(document.querySelector("#manager-request-chart"), {
-            chart: {
-                type: 'donut',
-                height: 320
-            },
-            series: @json($requestSummaryData),
-            labels: @json($requestSummaryLabels),
-            legend: {
-                position: 'bottom'
-            }
-        }).render();
-    });
-</script>
+            new ApexCharts(document.querySelector("#manager-request-chart"), {
+                chart: {
+                    type: 'donut',
+                    height: 320
+                },
+                series: @json($requestSummaryData),
+                labels: @json($requestSummaryLabels),
+                legend: {
+                    position: 'bottom'
+                }
+            }).render();
+        });
+    </script>
 @endpush

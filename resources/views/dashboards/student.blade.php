@@ -10,63 +10,22 @@
 
     <div class="row">
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-primary">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Outstanding Fees</h6>
-                            <h3 class="text-white mb-0 f-w-300">Rs. {{ number_format($totalOutstanding, 2) }}</h3>
-                            <p class="text-white-50 mb-0">Pending dues</p>
-                        </div>
-                        <i class="ph ph-money text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Outstanding Fees" :value="'Rs. ' . number_format($totalOutstanding, 2)" subtitle="Pending dues" icon="ph ph-money" color="primary" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-success">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Attendance Today</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $attendanceToday ? 'Marked' : 'Not Marked' }}</h3>
-                            <p class="text-white-50 mb-0">Meal attendance</p>
-                        </div>
-                        <i class="ph ph-fingerprint text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Attendance Today" :value="$attendanceToday ? 'Marked' : 'Not Marked'" subtitle="Meal attendance" icon="ph ph-fingerprint"
+                color="success" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-warning">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Pending Requests</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $pendingRequests }}</h3>
-                            <p class="text-white-50 mb-0">Requests in process</p>
-                        </div>
-                        <i class="ph ph-hourglass text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Pending Requests" :value="$pendingRequests" subtitle="Requests in process" icon="ph ph-hourglass"
+                color="warning" />
         </div>
 
         <div class="col-md-6 col-xl-3">
-            <div class="card bg-info">
-                <div class="card-body">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <div>
-                            <h6 class="mb-2 text-white">Notifications</h6>
-                            <h3 class="text-white mb-0 f-w-300">{{ $unreadNotifications }}</h3>
-                            <p class="text-white-50 mb-0">Unread updates</p>
-                        </div>
-                        <i class="ph ph-bell text-white" style="font-size: 38px;"></i>
-                    </div>
-                </div>
-            </div>
+            <x-kpi-card title="Notifications" :value="$unreadNotifications" subtitle="Unread updates" icon="ph ph-bell"
+                color="info" />
         </div>
     </div>
 
@@ -80,7 +39,7 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center mb-4">
                         <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center me-3"
-                             style="width: 58px; height: 58px;">
+                            style="width: 58px; height: 58px;">
                             <i class="ph ph-student" style="font-size: 30px;"></i>
                         </div>
 
@@ -92,24 +51,15 @@
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <small class="text-muted">Department</small>
-                                <h6 class="mb-0 mt-1">{{ $student->department ?? '-' }}</h6>
-                            </div>
+                            <x-info-box label="Department" :value="$student->department ?? '-'" />
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <small class="text-muted">Session</small>
-                                <h6 class="mb-0 mt-1">{{ $student->session ?? '-' }}</h6>
-                            </div>
+                            <x-info-box label="Session" :value="$student->session ?? '-'" />
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <div class="border rounded p-3 h-100">
-                                <small class="text-muted">Room</small>
-                                <h6 class="mb-0 mt-1">{{ $student->room_no ?? 'Not allocated' }}</h6>
-                            </div>
+                            <x-info-box label="Room" :value="$student->room_no ?? 'Not allocated'" />
                         </div>
                     </div>
 
@@ -161,7 +111,8 @@
 
                             <div class="d-flex justify-content-between">
                                 <span>Remaining</span>
-                                <strong>Rs. {{ number_format($latestInvoice->total_amount - $latestInvoice->paid_amount, 2) }}</strong>
+                                <strong>Rs.
+                                    {{ number_format($latestInvoice->total_amount - $latestInvoice->paid_amount, 2) }}</strong>
                             </div>
                         </div>
 
@@ -189,38 +140,23 @@
                 <div class="card-body">
                     <div class="row text-center">
                         <div class="col-md-2 col-6 mb-3">
-                            <div class="border rounded p-3">
-                                <h4>{{ $pendingLeaveRequests }}</h4>
-                                <small>Leave</small>
-                            </div>
+                            <x-stat-box :value="$pendingLeaveRequests" label="Leave" />
                         </div>
 
                         <div class="col-md-2 col-6 mb-3">
-                            <div class="border rounded p-3">
-                                <h4>{{ $pendingGatePasses }}</h4>
-                                <small>Gate Pass</small>
-                            </div>
+                            <x-stat-box :value="$pendingGatePasses" label="Gate Pass" />
                         </div>
 
                         <div class="col-md-2 col-6 mb-3">
-                            <div class="border rounded p-3">
-                                <h4>{{ $pendingGuestMeals }}</h4>
-                                <small>Guest Meals</small>
-                            </div>
+                            <x-stat-box :value="$pendingGuestMeals" label="Guest Meals" />
                         </div>
 
                         <div class="col-md-2 col-6 mb-3">
-                            <div class="border rounded p-3">
-                                <h4>{{ $pendingMessOffs }}</h4>
-                                <small>Mess Off</small>
-                            </div>
+                            <x-stat-box :value="$pendingMessOffs" label="Mess Off" />
                         </div>
 
                         <div class="col-md-2 col-6 mb-3">
-                            <div class="border rounded p-3">
-                                <h4>{{ $openComplaints }}</h4>
-                                <small>Complaints</small>
-                            </div>
+                            <x-stat-box :value="$openComplaints" label="Complaints" />
                         </div>
                     </div>
                 </div>
@@ -234,11 +170,25 @@
                 </div>
 
                 <div class="card-body">
-                    <a href="{{ route('student.room.index') }}" class="btn btn-outline-primary w-100 mb-2">My Room</a>
-                    <a href="{{ route('student.mess-menu.index') }}" class="btn btn-outline-success w-100 mb-2">Weekly Menu</a>
-                    <a href="{{ route('student.attendance.index') }}" class="btn btn-outline-info w-100 mb-2">Attendance History</a>
-                    <a href="{{ route('student.fees.index') }}" class="btn btn-outline-warning w-100 mb-2">My Fees</a>
-                    <a href="{{ route('notifications.index') }}" class="btn btn-outline-secondary w-100">Notifications</a>
+                    <x-action-button :href="route('student.room.index')" color="primary" class="mb-2">
+                        My Room
+                    </x-action-button>
+
+                    <x-action-button :href="route('student.mess-menu.index')" color="success" class="mb-2">
+                        Weekly Menu
+                    </x-action-button>
+
+                    <x-action-button :href="route('student.attendance.index')" color="info" class="mb-2">
+                        Attendance History
+                    </x-action-button>
+
+                    <x-action-button :href="route('student.fees.index')" color="warning" class="mb-2">
+                        My Fees
+                    </x-action-button>
+
+                    <x-action-button :href="route('notifications.index')" color="secondary">
+                        Notifications
+                    </x-action-button>
                 </div>
             </div>
         </div>
